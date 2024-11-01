@@ -18,7 +18,7 @@ const UsuarioSchema = Schema({
         unique: true,
         require: true
     },
-    celular:{
+    celular: {
         type: String,
         unique: true,
         require: true
@@ -33,14 +33,17 @@ const UsuarioSchema = Schema({
     },
     codes: [
         {
-            type: String,
-            unique: true
+            type: Schema.Types.ObjectId,
+            ref: 'Code'
         }
     ]
+}, {
+    // Default value for `codes` to avoid undefined errors
+    codes: { type: [Schema.Types.ObjectId], ref: 'Code', default: [] }
 });
 
 UsuarioSchema.methods.toJSON = function () {
-    const { __v, contraseña, _id, ...usuario } = this.toObject();
+    const { __v, password, _id, ...usuario } = this.toObject();
     usuario.uid = _id;
     return usuario;
 };
