@@ -50,16 +50,42 @@ const usersPut = async (req, res = response) => {
 
 
 const usersPost = async (req, res = response) => {
-  const { nombre, password, identificacion } = req.body;
+  const { nombre, password, identificacion, fecha_naci, correo, celular } = req.body;
 
   try {
+    
+    const [identExist, correoExist, celularExist] = await Promise.all([
+      Usuario.findOne({ identificacion }),
+      Usuario.findOne({ correo }),
+      Usuario.findOne({ celular })
+    ]);
 
-    const usuario = new Usuario({ nombre, password });
+    if (identExist) {
+      return res.status(400).json({
+        msg: `La identificación ${identificacion} ya está registrada`
+      });
+    }
+
+    if (correoExist) {
+      return res.status(400).json({
+        msg: `El correo ${correo} ya está registrado`
+      });
+    }
+
+    if (celularExist) {
+      return res.status(400).json({
+        msg: `El celular ${celular} ya está registrado`
+      });
+    }
+
+    
+    const usuario = new Usuario({ nombre, password, identificacion, fecha_naci, correo, celular });
    
+    
     const salt = bcryptjs.genSaltSync();
     usuario.password = bcryptjs.hashSync(password, salt);
 
-   
+    
     await usuario.save();
 
     res.json({
@@ -67,7 +93,8 @@ const usersPost = async (req, res = response) => {
       usuario,
     });
   } catch (error) {
-    return res.status(500).json({
+    console.error(error);
+    res.status(500).json({
       msg: "Error interno del servidor",
       error,
     });

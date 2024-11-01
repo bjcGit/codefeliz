@@ -28,7 +28,7 @@ const validarToken = async (req, res = response, next) => {
       });
     }
 
-    req.usuario = usuario; 
+    req.user = usuario; 
     next();
 
   } catch (error) {

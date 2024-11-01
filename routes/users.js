@@ -10,8 +10,8 @@ const {
 const { validarCampos } = require("../middlewares/validar-campos");
 const { validarToken } = require("../middlewares/validarToken");
 const { validarAdminRole } = require("../middlewares/validar-rol");
-const { usuarioPorId, existeNombre } = require('../helpers/dbValidacion');
-const Role = require('../models/rolesModel');
+const { usuarioPorId } = require('../helpers/dbValidacion');
+
 
 const router = Router();
 
@@ -19,21 +19,13 @@ router.get("/", usersGet);
 
 router.post('/', [
   check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-  check('nombre').custom(existeNombre), 
-  check('password', 'La contraseña es obligatoria').not().isEmpty(),
-  check('rol', 'El rol es obligatorio').custom(async (rol) => {
-    const existeRol = await Role.findOne({ rol });
-    if (!existeRol) {
-      throw new Error(`El rol '${rol}' no existe en la base de datos`);
-    }
-  }),
+  check('identificacion', 'La identificación es obligatoria').not().isEmpty(),
+  check('fecha_naci', 'La fecha de nacimiento es obligatoria').not().isEmpty(),
+  check('correo', 'El correo es obligatorio').isEmail(),
+  check('celular', 'El celular es obligatorio').not().isEmpty(),
+  check('password', 'La contraseña es obligatoria y debe tener al menos 4 caracteres').isLength({ min: 4 }),
   validarCampos
 ], usersPost);
-
-router.put("/:nombre",[
-  check('nombre', 'El nombre del usuario es obligatorio').not().isEmpty(),
-  validarCampos
-], usersPut);
 
 router.delete("/:id",[
   validarToken,

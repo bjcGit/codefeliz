@@ -9,7 +9,7 @@ class Server {
       users: "/v1/users",
       auth: "/v1/auth",
       roles: "/v1/roles",
-      signos: '/v1/signos',
+      codes: "/v1/codes"
     };
     this.app = express();
     this.port = process.env.PORT;
@@ -34,7 +34,7 @@ class Server {
     this.app.use(this.patchs.auth, require('../routes/auth'));
     this.app.use(this.patchs.users, require('../routes/users'));
     this.app.use(this.patchs.roles, require('../routes/roles'));
-    this.app.use(this.patchs.signos, require('../routes/signos'));
+    this.app.use(this.patchs.codes, require('../routes/codes'));
   }
 
   listen() {

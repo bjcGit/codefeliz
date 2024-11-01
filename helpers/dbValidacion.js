@@ -7,9 +7,9 @@ const existeNombre = async (nombre = "") => {
   }
 };
 const existeIdentificacion = async (identificacion = "") => {  
-  const identificacion = await Usuario.findOne({ identificacion });
-  if (identificacion) {
-    throw new Error(`La ${ identificacion } ya esta registrada`);
+  const ident = await Usuario.findOne({ identificacion });
+  if (ident) {
+    throw new Error(`La ${ ident } ya esta registrada`);
   }
 };
 

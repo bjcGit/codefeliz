@@ -4,13 +4,13 @@ const { jsonJWT } = require('../helpers/token');
 const Usuario = require('../models/modelUser');
 
 const login = async (req, res = response) => {
-  const { nombre, password } = req.body;
+  const { identificacion, password } = req.body;
 
   try {
-    const usuario = await Usuario.findOne({ nombre });
+    const usuario = await Usuario.findOne({ identificacion });
     if (!usuario) {
       return res.status(400).json({
-        msg: 'El nombre no existe'
+        msg: 'El usuario no existe'
       });
     }
 
